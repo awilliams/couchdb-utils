@@ -1,7 +1,7 @@
 couchdb-utils
 =============
 
-A fast, lightweight, and portable CouchDB utility. See help below for more information. Built with Go.
+A fast and portable CouchDB utility. See help below for more information. Built with Go.
 
 ### Download
 

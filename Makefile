@@ -28,3 +28,6 @@ format:
 
 clean:
 	$(GOCLEAN)
+
+test:
+	$(GOTEST) -v ./...
