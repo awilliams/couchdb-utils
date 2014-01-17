@@ -1,4 +1,4 @@
-couchdb-utils
+couchdb-utils [![Build Status](https://travis-ci.org/awilliams/couchdb-utils.png?branch=master)](https://travis-ci.org/awilliams/couchdb-utils)
 =============
 
 A fast and portable CouchDB utility. See help below for more information. Built with Go.
