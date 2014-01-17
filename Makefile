@@ -10,12 +10,13 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOINSTALL=$(GOCMD) install
 GOTEST=$(GOCMD) test
-GODEP=$(GOTEST) -i
+GODEP=$(GOCMD) get -d -v ./... 
 GOFMT=gofmt -w
  
 default: build
 
 build:
+	$(GODEP)
 	GOARCH=amd64 GOOS=linux $(GOBUILD) -o bin/linux-amd64/$(BIN)
 	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o bin/darwin-amd64/$(BIN)
 
@@ -30,4 +31,4 @@ clean:
 	$(GOCLEAN)
 
 test:
-	$(GOTEST) -v ./...
+	$(GODEP) && $(GOTEST) -v ./...
