@@ -1,0 +1,61 @@
+[ 
+  { 
+    "pid": "<0.242.0>", 
+    "changes_done": 31209, 
+    "database": "indexer_test_3", 
+    "design_document": "_design/test", 
+    "progress": 5, 
+    "started_on": 1316228432, 
+    "total_changes": 551201, 
+    "type": "indexer", 
+    "updated_on": 1316228461 
+  },
+  { 
+    "pid": "<0.242.0>", 
+    "changes_done": 31209, 
+    "database": "indexer_test_4", 
+    "design_document": "_design/BigDoc", 
+    "progress": 35, 
+    "started_on": 1316228432, 
+    "total_changes": 551201, 
+    "type": "indexer", 
+    "updated_on": 1316228461 
+  },
+  { 
+    "pid": "<0.1156.0>", 
+    "database": "indexer_test_3", 
+    "design_document": "_design/test", 
+    "progress": 21, 
+    "started_on": 1316229336, 
+    "type": "view_compaction", 
+    "updated_on": 1316229352 
+  }, 
+  { 
+    "pid": "<0.1303.0>", 
+    "replication_id": "1447443f5d0837538c771c3af68518eb+create_target",
+    "checkpointed_source_seq": 17333, 
+    "continuous": false, 
+    "doc_write_failures": 0, 
+    "docs_read": 17833, 
+    "docs_written": 17833, 
+    "missing_revisions_found": 17833, 
+    "progress": 3, 
+    "revisions_checked": 17833, 
+    "source": "http://fdmanana.iriscouch.com/indexer_test/", 
+    "source_seq": 551202, 
+    "started_on": 1316229471, 
+    "target": "indexer_test", 
+    "type": "replication", 
+    "updated_on": 1316230082 
+  },
+  {
+    "pid":"<0.19211.43>",
+    "changes_done":4108,
+    "database":"compaction_test",
+    "progress":26,
+    "started_on":1344535100,
+    "total_changes":15344,
+    "type":"database_compaction",
+    "updated_on":1344535102
+  } 
+]
