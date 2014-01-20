@@ -3,6 +3,16 @@ couchdb-utils [![Build Status](https://travis-ci.org/awilliams/couchdb-utils.png
 
 A fast and portable CouchDB utility. See help below for more information. Built with Go.
 
+Specifically this was built for maintaing a backup database by providing the following functionality:
+
+ * Easily replicate an entire remote machine. This can be run repeatedly, as it will skip over any existing replicators on the target. 
+ 
+  `couchdb-utils rep host maindb.example.com:5984 --continuous`
+
+ * Refresh/regenerate all views in the backup database to allow quick failover. This could be run from a cronjob. See the [couchdb faq](http://wiki.apache.org/couchdb/Frequently_asked_questions#I_want_to_update_my_view_indexes_more_often_than_only_when_a_user_reads_it._How_do_I_do_that_best.3F)
+ 
+  `couchdb-utils refreshviews`
+
 ### Download
 
 [Binaries for select systems are available](https://github.com/awilliams/couchdb-utils/releases)
