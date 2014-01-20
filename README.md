@@ -9,7 +9,7 @@ Specifically this was built for maintaing a backup database by providing the fol
  
   `couchdb-utils rep host maindb.example.com:5984 --continuous`
 
- * Refresh/regenerate all views in the backup database to allow quick failover. This could be run from a cronjob. See the [couchdb faq](http://wiki.apache.org/couchdb/Frequently_asked_questions#I_want_to_update_my_view_indexes_more_often_than_only_when_a_user_reads_it._How_do_I_do_that_best.3F)
+ * Refresh/regenerate all views in the backup database to allow quick failover. This could be run from a cronjob or as an external process. See the [couchdb faq](http://wiki.apache.org/couchdb/Frequently_asked_questions#I_want_to_update_my_view_indexes_more_often_than_only_when_a_user_reads_it._How_do_I_do_that_best.3F) for more info.
  
   `couchdb-utils refreshviews`
 
