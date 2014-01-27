@@ -253,7 +253,7 @@ var replicateCmd = &cobra.Command{
 var replicateHostConf api.ReplicationConfig
 var replicateHostCmd = &cobra.Command{
 	Use:   "host <remote_host> [--create --continuous --verbose]",
-	Short: "Replicates all databases in remote host",
+	Short: "Replicates all databases in remote host that do not begin with '_'",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
 			checkError(fmt.Errorf("Must provide remote database"))
