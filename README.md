@@ -24,7 +24,7 @@ There are no dependencies besides the included binary.
 # refresh views in `mydb` database on host couch.example.com:1234
 couchdb-utils refreshviews mydb --host=user:pass@couch.example.com:1234 -v
 
-# start continuous replication of all databases on remote host `33.33.33.10:5984`
+# start continuous replication of all databases on remote host `33.33.33.10:5984` that do not begin with '_'
 couchdb-utils rep host 33.33.33.10:5984 -h user:secret@33.33.33.11:5984 -v
 ```
 
