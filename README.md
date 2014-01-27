@@ -62,7 +62,7 @@ Available Commands:
   list                                                 :: Print all replicators
   start <source> <target> [--create --continuous]      :: Configure replication from source to target
   stop (<id>... | --all) [--verbose]                   :: Stop replicating given id(s) or all
-  host <remote_host> [--create --continuous --verbose] :: Replicates all databases in remote host
+  host <remote_host> [--create --continuous --verbose] :: Replicates all databases in remote host that do not begin with '_'
 
  Available Flags:
   -d, --debug=false: print http requests
