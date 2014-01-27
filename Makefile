@@ -1,5 +1,5 @@
 BIN=couchdb-utils
-VERSION="0.0.1"
+VERSION=0.0.1
 README=README.md
 LICENSE=LICENSE
 RELEASE_DIR=release
@@ -22,9 +22,21 @@ build:
 	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o bin/darwin-amd64/$(BIN)
 
 package:
-	tar -czf $(RELEASE_DIR)/$(BIN)-linux-amd64-v$(VERSION).tar.gz $(README) $(LICENSE) -C bin/linux-amd64 $(BIN)
-	tar -czf $(RELEASE_DIR)/$(BIN)-linux-386-v$(VERSION).tar.gz $(README) $(LICENSE) -C bin/linux-386 $(BIN)
-	tar -czf $(RELEASE_DIR)/$(BIN)-darwin-amd64-v$(VERSION).tar.gz $(README) $(LICENSE) -C bin/darwin-amd64 $(BIN)
+	rm -rf $(RELEASE_DIR)/couchdb-utils
+	mkdir $(RELEASE_DIR)/couchdb-utils 
+	cp $(README) $(RELEASE_DIR)/couchdb-utils/$(README)
+	cp $(LICENSE) $(RELEASE_DIR)/couchdb-utils/$(LICENSE)
+
+	cp -f bin/linux-amd64/$(BIN) $(RELEASE_DIR)/couchdb-utils/$(BIN)
+	tar -czf $(RELEASE_DIR)/$(BIN)-linux-amd64-v$(VERSION).tar.gz -C $(RELEASE_DIR) couchdb-utils
+
+	cp -f bin/linux-386/$(BIN) $(RELEASE_DIR)/couchdb-utils/$(BIN)
+	tar -czf $(RELEASE_DIR)/$(BIN)-linux-386-v$(VERSION).tar.gz -C $(RELEASE_DIR) couchdb-utils
+
+	cp -f bin/darwin-amd64/$(BIN) $(RELEASE_DIR)/couchdb-utils/$(BIN)
+	tar -czf $(RELEASE_DIR)/$(BIN)-darwin-amd64-v$(VERSION).tar.gz -C $(RELEASE_DIR) couchdb-utils
+
+	rm -rf $(RELEASE_DIR)/couchdb-utils
 
 format:
 	$(GOFMT) ./**/*.go
