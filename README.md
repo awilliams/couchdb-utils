@@ -21,10 +21,13 @@ There are no dependencies besides the included binary.
 
 **Example Usage**
 ```bash
-# refresh views in `mydb` database on host couch.example.com:1234
+# refresh views in `mydb` database on host couch.example.com:1234, print views refreshed
 couchdb-utils refreshviews mydb --host=user:pass@couch.example.com:1234 -v
+# refresh all views on host couch.example.com:1234, print http requests
+couchdb-utils refreshviews --host=user:pass@couch.example.com:1234 -d
 
-# start continuous replication of all databases on remote host `33.33.33.10:5984` that do not begin with '_'
+# start continuous replication of all databases that do not begin with '_'
+# from `33.33.33.10:5984` to `user:secret@33.33.33.11:5984`
 couchdb-utils rep host 33.33.33.10:5984 -h user:secret@33.33.33.11:5984 -v
 ```
 
