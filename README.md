@@ -3,7 +3,7 @@ couchdb-utils [![Build Status](https://travis-ci.org/awilliams/couchdb-utils.png
 
 A fast and portable CouchDB command line utility. See help below for more information. Built with Go.
 
-Specifically this was built for maintaing a backup database by providing the following functionality:
+Specifically this was **built for maintaing a backup database by providing the following functionality**:
 
  * Easily replicate an entire remote machine (except databases that begin with '_'). This can be run repeatedly, as it will skip over any existing replicators on the target. 
  
