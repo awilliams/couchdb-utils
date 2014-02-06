@@ -13,11 +13,32 @@ Specifically this was **built for maintaing a backup database by providing the f
  
   `couchdb-utils refreshviews`
 
+Speed is an important feature. Here's a general idea of what you can expect.
+
+```bash
+$ time couchdb-utils databases | wc -l
+26
+
+real	0m0.020s
+user	0m0.000s
+sys	0m0.000s
+
+$ time couchdb-utils views | wc -l
+575
+
+real	0m0.076s
+user	0m0.012s
+sys	0m0.016s
+```
+*Run using local database on a linux virtual machine, YMMV.*
+
 ### Download
 
 [Binaries for select systems are available](https://github.com/awilliams/couchdb-utils/releases)
 
 There are no dependencies besides the included binary.
+
+### Usage
 
 **Example Usage**
 ```bash
@@ -73,6 +94,16 @@ Available Commands:
   -v, --verbose=false: chatty output
 ```
 
-##### Compiling
+## Compiling
 
 A simple makefile is provided. Make sure GO is installed and setup for cross-compiling. See [here](http://dave.cheney.net/2012/09/08/an-introduction-to-cross-compilation-with-go) and [here](https://coderwall.com/p/pnfwxg) for help.
+
+## Contributing
+
+Please do.
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
