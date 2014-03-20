@@ -27,7 +27,7 @@ func (v View) String() string {
 }
 
 func (v View) refreshPath() string {
-	return fmt.Sprintf(`%s/%s/_view/%s?limit=0&stale=update_after`, v.Database.String(), v.DesignDoc.ID, v.Name)
+	return fmt.Sprintf(`%s/%s/_view/%s?limit=0&stale=update_after`, v.Database.URL(), v.DesignDoc.ID, v.Name)
 }
 
 func (v View) PP(printer util.Printer) {
@@ -58,7 +58,7 @@ func (d DesignDoc) PP(printer util.Printer) {
 type Views map[DesignDoc][]View
 
 func (v Views) path(db Database) string {
-	return fmt.Sprintf(`%s/_all_docs?startkey="_design/"&endkey="_design0"&include_docs=true`, db.String())
+	return fmt.Sprintf(`%s/_all_docs?startkey="_design/"&endkey="_design0"&include_docs=true`, db.URL())
 }
 
 func (v Views) PP(printer util.Printer) {

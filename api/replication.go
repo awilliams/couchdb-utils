@@ -165,12 +165,13 @@ func (c Couchdb) ReplicateHost(remoteCouch *Couchdb, conf ReplicationConfig) (*D
 	}
 	invalidPrefix := uint8('_')
 	for _, remoteDatabase := range remoteDatabases {
-		remoteDbName := *remoteDatabase.Name
+		remoteDbName := remoteDatabase.URL()
 		if remoteDbName[0] == invalidPrefix {
 			continue
 		}
 		conf.UserCtx = session.UserCtx
-		conf.Source = remoteCouch.url(remoteDbName)
+    u := remoteCouch.url(remoteDbName)
+		conf.Source = u.String()
 		conf.Target = remoteDbName
 		conf.GenerateId()
 		existingReplicator, found := replicators.findById(conf.ID)
