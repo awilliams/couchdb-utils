@@ -29,16 +29,23 @@ func TestNewUrl(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	expectedUrl := fmt.Sprintf("http://%s/", host)
+	expectedUrl := fmt.Sprintf("http://%s", host)
 	actualUrl := couchdb.url()
-	if actualUrl != expectedUrl {
-		t.Fatalf("Expected: %s, Received: %s", expectedUrl, actualUrl)
+	if actualUrl.String() != expectedUrl {
+		t.Fatalf("Expected: %s, Received: %s", expectedUrl, actualUrl.String())
 	}
 
 	expectedUrl = fmt.Sprintf("http://%s/one/two", host)
 	actualUrl = couchdb.url("one", "two")
-	if actualUrl != expectedUrl {
-		t.Fatalf("Expected: %s, Received: %s", expectedUrl, actualUrl)
+	if actualUrl.String() != expectedUrl {
+		t.Fatalf("Expected: %s, Received: %s", expectedUrl, actualUrl.String())
+	}
+	
+	// test weird database names
+	expectedUrl = fmt.Sprintf("http://%s/weird%%2Fdata%%2Bbase%%2Fname", host)
+	actualUrl = couchdb.url("weird%2Fdata%2Bbase%2Fname")
+	if actualUrl.String() != expectedUrl {
+		t.Fatalf("Expected: %s, Received: %s", expectedUrl, actualUrl.String())
 	}
 }
 
