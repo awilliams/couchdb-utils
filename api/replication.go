@@ -165,12 +165,14 @@ func (c Couchdb) ReplicateHost(remoteCouch *Couchdb, conf ReplicationConfig) (*D
 	}
 	invalidPrefix := uint8('_')
 	for _, remoteDatabase := range remoteDatabases {
-		remoteDbName := remoteDatabase.URL()
+		// Source must use the escaped database name
+		// Target must use unescaped database name
+		remoteDbName := remoteDatabase.String()
 		if remoteDbName[0] == invalidPrefix {
 			continue
 		}
 		conf.UserCtx = session.UserCtx
-    u := remoteCouch.url(remoteDbName)
+		u := remoteCouch.url(remoteDatabase.URL())
 		conf.Source = u.String()
 		conf.Target = remoteDbName
 		conf.GenerateId()

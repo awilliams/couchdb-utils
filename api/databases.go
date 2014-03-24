@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/awilliams/couchdb-utils/util"
-  "net/url"
+	"net/url"
 )
 
 type Database struct {
@@ -14,7 +14,7 @@ func (d *Database) String() string {
 }
 
 func (d *Database) URL() string {
-  return url.QueryEscape(d.String())
+	return url.QueryEscape(d.String())
 }
 
 func (d Database) PP(printer util.Printer) {

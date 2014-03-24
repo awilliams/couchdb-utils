@@ -16,7 +16,7 @@ func (c couchdbutils) PP(printer util.Printer) {
 
 var CouchdbUtils *couchdbutils = &couchdbutils{
 	"couchdb-utils",
-	"0.0.1",
+	"0.0.2",
 	"A fast, lightweight, and portable CouchDB utility.",
 }
 
