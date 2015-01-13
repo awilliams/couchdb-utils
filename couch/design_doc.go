@@ -1,6 +1,7 @@
 package couch
 
 import (
+	"fmt"
 	"net/url"
 	"sort"
 	"strings"
@@ -29,7 +30,8 @@ func ListDesignDocs(db *Database) (DesignDocs, error) {
 
 	docs := make(DesignDocs, len(result.Rows), len(result.Rows))
 	for i, doc := range result.Rows {
-		docs[i] = NewDesignDoc(db, doc.ID, doc.Key)
+		name := strings.Split(doc.ID, "/")[1]
+		docs[i] = NewDesignDoc(db, name)
 		docs[i].Views = make(Views, len(doc.Doc.Views), len(doc.Doc.Views))
 		j := 0
 		for view := range doc.Doc.Views {
@@ -42,15 +44,15 @@ func ListDesignDocs(db *Database) (DesignDocs, error) {
 	return docs, nil
 }
 
-func NewDesignDoc(db *Database, id, key string) *DesignDoc {
+func NewDesignDoc(db *Database, name string) *DesignDoc {
+	id := "_design/" + name
 	u := *db.URL
 	u.Path += "/" + id
-	components := strings.Split(id, "/")
 
 	return &DesignDoc{
 		ID:       id,
-		Key:      key,
-		Name:     components[1],
+		Key:      id,
+		Name:     name,
 		Database: db,
 		URL:      &u,
 	}
@@ -82,6 +84,32 @@ func NewView(dd *DesignDoc, name string) *View {
 		DesignDoc: dd,
 		URL:       &u,
 	}
+}
+
+func NewViewFromURI(uri string) (*View, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+	path := strings.Trim(u.Path, "/")
+	pathComponents := strings.Split(path, "/")
+	if len(pathComponents) != 5 {
+		return nil, fmt.Errorf("invalid view path from url '%s'", uri)
+	}
+	if pathComponents[1] != "_design" {
+		return nil, fmt.Errorf("invalid view path from url '%s' (no design)", uri)
+	}
+	if pathComponents[3] != "_view" {
+		return nil, fmt.Errorf("invalid view path from url '%s' (no view)", uri)
+	}
+
+	u.Path = pathComponents[0]
+	db, err := NewDatabaseFromURI(u.String())
+	if err != nil {
+		return nil, err
+	}
+	design := NewDesignDoc(db, pathComponents[2])
+	return NewView(design, pathComponents[4]), nil
 }
 
 type View struct {

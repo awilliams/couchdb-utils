@@ -5,27 +5,28 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
-	"strings"
+	"os"
 )
 
 // NewClient makes a new couch client given the CouchDB server URL
 func NewClient(host string) (*Client, error) {
-	if !strings.HasPrefix(host, "http") {
-		host = "http://" + host
-	}
 	u, err := url.Parse(host)
 	if err != nil {
 		return nil, err
 	}
 	return &Client{
-		Host: u,
+		Host:    u,
+		LogHTTP: false,
 	}, nil
 }
 
 type Client struct {
-	Host *url.URL
+	Host    *url.URL
+	LogHTTP bool
 }
 
 func (c *Client) Get(path string, query url.Values, result interface{}) error {
@@ -65,8 +66,9 @@ func (c *Client) NewRequest(method string, path string, query url.Values) *Reque
 	u.RawQuery = query.Encode()
 
 	return &Request{
-		Method: method,
-		URL:    &u,
+		Method:  method,
+		URL:     &u,
+		LogHTTP: c.LogHTTP,
 	}
 }
 
@@ -75,6 +77,7 @@ type Request struct {
 	Method  string
 	URL     *url.URL
 	Payload interface{}
+	LogHTTP bool
 }
 
 // Send performs the HTTP action and parses the JSON body into result
@@ -84,7 +87,12 @@ func (r *Request) Send(result interface{}) (*http.Response, error) {
 		return nil, err
 	}
 
-	resp, err := (&http.Client{}).Do(req)
+	c := &http.Client{}
+	if r.LogHTTP {
+		c.Transport = NewLoggerTransport()
+	}
+
+	resp, err := c.Do(req)
 	if err != nil {
 		return resp, err
 	}
@@ -139,4 +147,39 @@ type Error struct {
 // Error returns a string, conforming to the error interface
 func (e Error) Error() string {
 	return fmt.Sprintf("error: %s; reason: %s; HTTP status: %d", e.Err, e.Reason, e.Status)
+}
+
+// NewLoggerTransport returns a transport which logs requests and responses to STDERR.
+func NewLoggerTransport() LoggerTransport {
+	return LoggerTransport{
+		transport: http.DefaultTransport,
+		Logger:    log.New(os.Stderr, "", 0),
+	}
+}
+
+type LoggerTransport struct {
+	transport http.RoundTripper
+	*log.Logger
+}
+
+// RoundTrip allows LoggerTransport to satisfy http.RoundTripper
+func (t LoggerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if b, err := httputil.DumpRequest(req, true); err != nil {
+		t.Printf("dump request error: %v", err)
+	} else {
+		t.Print(string(b) + "\n")
+	}
+
+	res, err := t.transport.RoundTrip(req)
+	if err != nil {
+		t.Printf("roundtrip error: %v", err)
+		return res, err
+	}
+
+	if b, err := httputil.DumpResponse(res, true); err != nil {
+		t.Printf("dump response error: %v", err)
+	} else {
+		t.Print(string(b) + "\n")
+	}
+	return res, err
 }

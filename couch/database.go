@@ -8,7 +8,7 @@ import (
 )
 
 // AllDBs fetches the list of databases on the server
-func AllDBs(c *Client) (Databases, error) {
+func (c *Client) AllDBs() (Databases, error) {
 	var result []string
 	if err := c.Get("_all_dbs", nil, &result); err != nil {
 		return nil, err
@@ -21,6 +21,7 @@ func AllDBs(c *Client) (Databases, error) {
 	return dbs, nil
 }
 
+// NewDatabase receives a client and database name and returns a Database
 func NewDatabase(c *Client, name string) *Database {
 	u := *c.Host
 	u.Path += name
@@ -31,29 +32,22 @@ func NewDatabase(c *Client, name string) *Database {
 	}
 }
 
-func DatabasesFromURLs(urls []string) (Databases, error) {
-	// TODO: allow for relative urls, eg 'databasename'
-	dbs := make(Databases, len(urls), len(urls))
-	for i, s := range urls {
-		u, err := url.Parse(s)
-		if err != nil {
-			return nil, err
-		}
-		if !u.IsAbs() {
-			return nil, fmt.Errorf("invalid database url '%s'", s)
-		}
-		path := strings.Trim(u.Path, "/")
-		if path == "" {
-			return nil, fmt.Errorf("invalid database path from url '%s'", s)
-		}
-		u.Path = ""
-		client, err := NewClient(u.String())
-		if err != nil {
-			return nil, err
-		}
-		dbs[i] = NewDatabase(client, path)
+// DatabasesFromURI processes a database URI (either absolute or relative) and creates a Database
+func NewDatabaseFromURI(uri string) (*Database, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
 	}
-	return dbs, nil
+	path := strings.Trim(u.Path, "/")
+	if path == "" {
+		return nil, fmt.Errorf("invalid database path from url '%s'", uri)
+	}
+	u.Path = ""
+	client, err := NewClient(u.String())
+	if err != nil {
+		return nil, err
+	}
+	return NewDatabase(client, path), nil
 }
 
 type Database struct {
@@ -67,7 +61,11 @@ func (d *Database) String() string {
 }
 
 func (d *Database) URI() string {
-	return d.URL.String()
+	if d.URL.IsAbs() {
+		return d.URL.String()
+	} else {
+		return d.URL.Path
+	}
 }
 
 type Databases []*Database
