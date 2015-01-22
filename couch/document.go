@@ -7,18 +7,14 @@ import (
 )
 
 // DocumentsFromURI processes a document URI (either absolute or relative) and creates a Document
-func NewDocumentFromURI(uri string) (*Document, error) {
-	u, err := url.Parse(uri)
+func NewDocumentFromURI(s string) (*Document, error) {
+	u, err := NewURI(s)
 	if err != nil {
 		return nil, err
 	}
-	path := strings.Trim(u.Path, "/")
-	if path == "" {
-		return nil, fmt.Errorf("invalid document path from url '%s'", uri)
-	}
-	pathComponents := strings.Split(path, "/")
-	if len(pathComponents) < 2 {
-		return nil, fmt.Errorf("invalid document path from url '%s'", uri)
+	components := u.Components()
+	if len(components) < 2 {
+		return nil, fmt.Errorf("invalid document path from url '%s'", s)
 	}
 	u.Path = pathComponents[0]
 	db, err := NewDatabaseFromURI(u.String())

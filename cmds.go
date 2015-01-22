@@ -157,6 +157,7 @@ func pull(client *couch.Client, output *Output, sourceURIs []string, continuous 
 	return nil
 }
 
+// refreshViews receives a list of views (either absolute or in component form) and does a HEAD request for each with state=update_after
 func refreshViews(client *couch.Client, output *Output, input []string, uri bool) error {
 	views := make(couch.Views, len(input), len(input))
 	if uri {

@@ -14,7 +14,7 @@ import (
 
 // NewClient makes a new couch client given the CouchDB server URL
 func NewClient(host string) (*Client, error) {
-	u, err := url.Parse(host)
+	u, err := NewURI(host)
 	if err != nil {
 		return nil, err
 	}
@@ -24,26 +24,31 @@ func NewClient(host string) (*Client, error) {
 	}, nil
 }
 
+// Client is used to generate and send requests to a CouchDB host
 type Client struct {
-	Host    *url.URL
+	Host    *URI
 	LogHTTP bool
 }
 
+// Get performs an HTTP GET request
 func (c *Client) Get(path string, query url.Values, result interface{}) error {
 	_, err := c.NewRequest("GET", path, query).Send(result)
 	return err
 }
 
+// Head performs an HTTP HEAD request
 func (c *Client) Head(path string, query url.Values, result interface{}) error {
 	_, err := c.NewRequest("HEAD", path, query).Send(result)
 	return err
 }
 
+// Delete performs an HTTP DELETE request
 func (c *Client) Delete(path string, query url.Values, result interface{}) error {
 	_, err := c.NewRequest("DELETE", path, query).Send(result)
 	return err
 }
 
+// Post performs an HTTP POST request
 func (c *Client) Post(path string, query url.Values, payload interface{}, result interface{}) error {
 	req := c.NewRequest("POST", path, query)
 	req.Payload = payload
@@ -51,6 +56,7 @@ func (c *Client) Post(path string, query url.Values, payload interface{}, result
 	return err
 }
 
+// Put performs an HTTP PUT request
 func (c *Client) Put(path string, query url.Values, payload interface{}, result interface{}) error {
 	req := c.NewRequest("PUT", path, query)
 	req.Payload = payload
@@ -61,7 +67,7 @@ func (c *Client) Put(path string, query url.Values, payload interface{}, result 
 // NewRequest creates a Request given the HTTP verb, path, and optional query values. Additional data
 // can be added to the Request after creation, such as Payload
 func (c *Client) NewRequest(method string, path string, query url.Values) *Request {
-	u := *c.Host
+	u := (url.URL)(*c.Host)
 	u.Path = path
 	u.RawQuery = query.Encode()
 
@@ -157,6 +163,7 @@ func NewLoggerTransport() LoggerTransport {
 	}
 }
 
+// LoggerTransport is a http.RoundTripper with logging functionality (on both request and response)
 type LoggerTransport struct {
 	transport http.RoundTripper
 	*log.Logger
